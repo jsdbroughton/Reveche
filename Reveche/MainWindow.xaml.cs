@@ -27,6 +27,8 @@ namespace Reveche
     private ObservableCollection<RevitFile> SourceCollection = new ObservableCollection<RevitFile>();
     List<String> RevitFiles = new List<string>();
     
+
+
     public MainWindow()
     {
       InitializeComponent();
@@ -62,6 +64,7 @@ namespace Reveche
             RevitFiles.Add(s);
           }
             
+
         }
         //MessageBox.Show("Completed in " + (DateTime.Now - start).TotalSeconds.ToString() + " seconds.");
         //user double clicked on the exe
@@ -93,6 +96,7 @@ namespace Reveche
         MessageBox.Show(ex.Message);
       }
     }
+
 
     private static void GetYearFromFileInfo(string pathToRevitFile, RevitFile rf)
     {
