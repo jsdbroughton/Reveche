@@ -10,7 +10,7 @@ using System.IO.Packaging;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-
+using System.Windows.Input;
 
 namespace Reveche
 {
@@ -27,12 +27,15 @@ namespace Reveche
     private ObservableCollection<RevitFile> SourceCollection = new ObservableCollection<RevitFile>();
     List<String> RevitFiles = new List<string>();
     
+
+
     public MainWindow()
     {
       InitializeComponent();
       Title = "Revit Version Checker v" + Assembly.GetExecutingAssembly().GetName().Version;
       SourceFilesList.ItemsSource = SourceCollection;
     }
+
 
 
     private void ProcessSourceFiles(string[] files)
@@ -62,6 +65,7 @@ namespace Reveche
             RevitFiles.Add(s);
           }
             
+
         }
         //MessageBox.Show("Completed in " + (DateTime.Now - start).TotalSeconds.ToString() + " seconds.");
         //user double clicked on the exe
@@ -93,6 +97,7 @@ namespace Reveche
         MessageBox.Show(ex.Message);
       }
     }
+
 
     private static void GetYearFromFileInfo(string pathToRevitFile, RevitFile rf)
     {
@@ -311,6 +316,32 @@ namespace Reveche
       catch (System.Exception ex1)
       {
         MessageBox.Show("exception: " + ex1);
+      }
+    }
+
+    private void Window_Paste( object sender, ExecutedRoutedEventArgs e ) {
+
+      try {
+        string text = Clipboard.GetText() as string;
+
+        if ( string.IsNullOrWhiteSpace( text ) )
+          return;
+
+        string[] lines = Regex.Split( text, "\r\n|\r|\n" );
+
+        List<string> fileList = new List<string>();
+
+        foreach ( var line in lines ) {
+
+          if ( File.Exists( line ) ) {
+            fileList.Add( line );
+          }
+        }
+
+        ProcessSourceFiles( fileList.ToArray() );
+      }
+      catch ( System.Exception ex1 ) {
+        MessageBox.Show( "exception: " + ex1 );
       }
     }
 
