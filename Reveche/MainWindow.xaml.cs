@@ -26,8 +26,8 @@ namespace Reveche
 
     private ObservableCollection<RevitFile> SourceCollection = new ObservableCollection<RevitFile>();
     List<String> RevitFiles = new List<string>();
-
     
+
 
     public MainWindow()
     {
@@ -150,7 +150,6 @@ namespace Reveche
         MessageBox.Show(ex.Message);
       }
     }
-
    
     /// <summary>
     /// Dumb way to get current RenameType
@@ -211,6 +210,48 @@ namespace Reveche
       catch (System.Exception ex1)
       {
         MessageBox.Show("exception: " + ex1);
+      }
+
+    }
+    /// <summary>
+    /// Click Add Files from List
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
+    private void AddFilesFromListBtn_OnClick( object sender, RoutedEventArgs e ) {
+      try {
+        var openFileDialog1 = new Microsoft.Win32.OpenFileDialog();
+        openFileDialog1.Title = "Select file list";
+        openFileDialog1.Filter = "Text Files (*.txt)|*.txt|All files (*.*)|*.*";
+        openFileDialog1.Multiselect = false;
+
+        openFileDialog1.RestoreDirectory = true;
+        var result = openFileDialog1.ShowDialog(); // Show the dialog.
+
+        if ( result == true ) // Test result.
+        {
+          // Parse file to extract valid filenames into a array equivalent to the open file dialog.
+
+          var fileList = new List<string>();
+
+          if ( File.Exists( openFileDialog1.FileName ) ) {
+
+            System.IO.StreamReader file = new System.IO.StreamReader( openFileDialog1.FileName );
+            string line;
+            while ( ( line = file.ReadLine() ) != null ) {
+            
+              if ( File.Exists( line ) ) {
+                fileList.Add( line );
+              }
+            }
+
+            ProcessSourceFiles( fileList.ToArray() );
+          }
+
+        }
+      }
+      catch ( System.Exception ex1 ) {
+        MessageBox.Show( "exception: " + ex1 );
       }
 
     }
@@ -333,13 +374,8 @@ namespace Reveche
       }
     }
     #endregion
-
    
-
- 
-
     #region version stuff
-
 
     // Code thanks to Jeremy Tammik
     // Please check his blog
@@ -369,7 +405,6 @@ namespace Reveche
                 "File doesn't contain {0} stream", StreamName));
           }
 
-
           StreamInfo imageStreamInfo =
               ssRoot.BaseRoot.GetStreamInfo(StreamName);
 
@@ -388,7 +423,6 @@ namespace Reveche
       }
       return null;
     }
-
 
 
     public static class StructuredStorageUtils
